@@ -1,0 +1,2 @@
+car_model
+-DCATKIN_DEVEL_PREFIX=/home/pigpighero/DEMO01_WS/devel -DCMAKE_INSTALL_PREFIX=/home/pigpighero/DEMO01_WS/install -G Unix Makefiles

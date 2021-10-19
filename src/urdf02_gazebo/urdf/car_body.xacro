@@ -1,0 +1,154 @@
+<robot name="mycar" xmlns:xacro="http://wiki.ros.org/xacro">
+<!-- parameter -->
+        <xacro:property name="PI" value="3.1415926"/>
+        <material name="black">
+            <color rgba="0 0 0 1" />
+        </material >
+        <material name="yellow">
+            <color rgba="0.8 0.3 0.1 0.5"/>
+        </material>
+
+       
+
+<!-- creat foot_print -->
+              <xacro:macro name="create_sphere"  params="name radius  colorname mass">
+                <link name="${name}">
+                        <visual>
+                                <geometry>
+                                        <sphere radius="${radius}"/>
+                                </geometry>
+                                <material name="${colorname}"/>
+                                <origin xyz="0 0 0" rpy="0 0 0"/>
+                        </visual>
+                        <!-- <collision>
+                                 <geometry>
+                                        <sphere radius="${radius}"/>
+                                </geometry>
+                                <origin xyz="0 0 0" rpy="0 0 0"/>
+                        </collision>
+                        <xacro:sphere_inertial_matrix m="${mass}" r="${radius}"/> -->
+                </link>
+        </xacro:macro>
+
+        <xacro:create_sphere name="foot_print" radius="0.001" colorname="black" mass="0.01"/>
+
+<!-- creat body link -->
+         <xacro:property name="body_width" value="0.2"/>    
+        <xacro:property name="body_length" value="0.3"/>
+        <xacro:property name="body_height" value="0.05"/>
+        <xacro:property  name="body_mass" value="1" />
+
+        <link name="body">
+                        <visual>
+                                        <geometry>
+                                                        <box size="${body_length} ${body_width} ${body_height}"/>
+                                        </geometry>
+                                        <material name="yellow"/>
+                                        <origin xyz="0 0 0" rpy="0 0 0"/>
+                        </visual>
+                        <collision>
+                                        <geometry>
+                                                        <box size="${body_length} ${body_width} ${body_height}"/>
+                                        </geometry>
+                                        <origin xyz="0 0 0" rpy="0 0 0"/>
+                        </collision>
+                        <xacro:Box_inertial_matrix m="${body_mass}" w="${body_width}" l="${body_length}" h="${body_height}"/>
+        </link>
+
+ <!-- create  joint  body2foot_print -->
+<xacro:property name="vertical2ground_distance" value="0.05"/>
+
+<joint name="body2foot_print" type="fixed">
+        <parent link="foot_print"/>
+        <child link="body"/>
+        <origin xyz="0 0 ${body_height/2+vertical2ground_distance}" rpy="0 0 0"/>
+</joint>
+
+
+<!-- creat wheel link -->
+        <xacro:macro name="create_cylinder"  params="name radius length colorname mass">
+                <link name="${name}">
+                        <visual>
+                                <geometry>
+                                        <cylinder radius="${radius}" length="${length}"/>
+                                </geometry>
+                                <material name="${colorname}"/>
+                                <origin xyz="0 0 0" rpy="0 0 0"/>
+                        </visual>
+                        <collision>
+                                <geometry>
+                                        <cylinder radius="${radius}" length="${length}"/>
+                                </geometry>
+                                <origin xyz="0 0 0" rpy="0 0 0"/>
+                        </collision>
+                      <xacro:cylinder_inertial_matrix m="${mass}" r="${radius}" h="${length}" />
+                </link>
+        </xacro:macro>
+
+        <xacro:property name="wheel_radius" value="0.05"/>
+        <xacro:property name="wheel_length" value="0.015"/>
+        <xacro:property name="wheel_mass" value="0.05" />
+
+        <xacro:create_cylinder name="wheel_front_right" radius="${wheel_radius}" length="${wheel_length}" colorname="black" mass="${wheel_mass}"/>
+        <xacro:create_cylinder name="wheel_front_left" radius="${wheel_radius}" length="${wheel_length}" colorname="black" mass="${wheel_mass}"/>
+        <xacro:create_cylinder  name="wheel_behind_right" radius="${wheel_radius}" length="${wheel_length}" colorname="black" mass="${wheel_mass}"/>
+        <xacro:create_cylinder name="wheel_behind_left" radius="${wheel_radius}" length="${wheel_length}" colorname="black" mass="${wheel_mass}"/>
+       
+
+<!-- create joint wheel2body -->
+<xacro:property name="wheel_distance" value="${body_length/2-wheel_radius}"/>
+
+ <xacro:macro name="wheel2body" params="name xflag yflag">
+                <joint name="${name}2body" type="continuous">
+                        <parent link="body"/>
+                        <child link="${name}"/>
+                        <origin xyz="${xflag}${wheel_distance} ${yflag}${body_width/2+wheel_length/2} ${wheel_radius-vertical2ground_distance-body_height/2}" rpy="${-PI/2} 0 0"/>
+                        <axis xyz="0 0 1"/>
+                </joint>
+</xacro:macro>
+
+<xacro:wheel2body name="wheel_front_right" xflag="+" yflag="-"/>
+<xacro:wheel2body name="wheel_behind_right" xflag="-" yflag="-"/>
+<xacro:wheel2body name="wheel_front_left" xflag="+" yflag="+"/>
+<xacro:wheel2body name="wheel_behind_left" xflag="-" yflag="+"/>
+
+
+
+<gazebo reference="body">
+                <material> Gazebo/Yellow</material>
+</gazebo>
+
+<gazebo reference="wheel_front_right">
+                <material>Gazebo/Black</material>
+                    <mu1>1000000</mu1>
+		    <mu2>1000000</mu2>
+		    <kp>1000</kp>
+		    <kd>1000</kd>
+</gazebo>
+
+<gazebo reference="wheel_behind_right">
+                <material>Gazebo/Black</material>
+                         <mu1>1000000</mu1>
+		    <mu2>1000000</mu2>
+		    <kp>1000</kp>
+		    <kd>1000</kd>
+</gazebo>
+
+<gazebo reference="wheel_front_left">
+                <material>Gazebo/Black</material>
+                         <mu1>1000000</mu1>
+		    <mu2>1000000</mu2>
+		    <kp>1000</kp>
+		    <kd>1000</kd>
+</gazebo>
+
+<gazebo reference="wheel_behind_left">
+                <material>Gazebo/Black</material>
+                         <mu1>1000000</mu1>
+		    <mu2>1000000</mu2>
+		    <kp>1000</kp>
+		    <kd>1000</kd>
+</gazebo>
+
+</robot>
+
