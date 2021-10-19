@@ -2,7 +2,7 @@
     <!-- 设置参数 -->
   
     <!-- 启动 rviz -->
-    <node pkg="rviz" type="rviz" name="rviz" args="-d $(find urdf01_rviz)/config/show_mycar.rviz"/>
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(find urdf02_rviz)/config/show_mycar.rviz"/>
 <!-- 关节坐标发布节点 -->
  <node pkg="joint_state_publisher" type="joint_state_publisher" name="joint_state_publisher" />
  <!--机器人坐标发布节点  -->

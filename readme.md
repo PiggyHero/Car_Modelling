@@ -2,6 +2,7 @@
 
 首先配置好环境变量
 
+# 1 创建小车模型及传感器并在gazebo和rviz中显示
 然后用下列命令启动gazebo
 ```bash
 roslaunch urdf02_gazebo car_gazebo.launch
@@ -16,3 +17,15 @@ roslaunch urdf02_gazebo car_rviz.launch
 ```bash
 rosrun teleop_twist_keyboard teleop_twist_keyboard.py 
 ```
+# 2 slam建图
+先运行下列命令启动gazebo并导入小车模型
+```bash
+roslaunch urdf02_gazebo car_gazebo.launch
+```
+然后运行
+
+```bash
+roslaunch navigation_demo nav01_slam
+```
+
+完成slam建图
