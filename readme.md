@@ -11,3 +11,8 @@ roslaunch urdf02_gazebo car_gazebo.launch
 ```bash
 roslaunch urdf02_gazebo car_rviz.launch
 ```
+
+可以运行键盘控制节点控制小车运动
+```bash
+rosrun teleop_twist_keyboard teleop_twist_keyboard.py 
+```
